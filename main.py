@@ -12,7 +12,6 @@ dpg.create_viewport(title="Pyxis")
 dpg.setup_dearpygui()
 
 with dpg.window(label=l.t("login_title")):
-    dpg.add_text("Login")
     dpg.add_button(label="Log in with Google", callback=google_login)
     dpg.add_text("Log in with email")
     dpg.add_input_text(label="Email")
