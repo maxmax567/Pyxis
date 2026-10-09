@@ -1,11 +1,12 @@
 {
     "language": "Español",
     "login_title": "Iniciar Sesión en Pyxis",
+    "email_login": "Login con email",
     "email_label": "Email",
     "password_label": "Contraseña",
     "login_button": "Iniciar Sesión",
     "register_button": "Registrarse",
     "google_login": "Login con Google",
-    "logout_button": "Cerrar Sesión",
-    "connected_as": "Conectado como"
+    "main_title": "Menu de Pyxis",
+    "forgot_password_button": "He olvidado la contraseña"
 }

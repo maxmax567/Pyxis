@@ -1,0 +1,12 @@
+{
+    "language": "Valencià",
+    "login_title": "Iniciar sessió a Pyxis",
+    "email_login": "Iniciar sessió amb correu electrònic",
+    "email_label": "Correu electrònic",
+    "password_label": "Contrasenya",
+    "login_button": "Iniciar sessió",
+    "register_button": "Registrar-se",
+    "google_login": "Iniciar sessió amb Google",
+    "main_title": "Menú de Pyxis",
+    "forgot_password_button": "He oblidat la contrasenya"
+}

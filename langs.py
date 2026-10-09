@@ -8,9 +8,7 @@ import os
 TRANSLATIONS = {}
 
 # Supported languages
-languages = ["en", "es", "ca"] # Maybe in separate file?
-
-
+languages = ["en", "es", "ca", "va", "fr"] # Maybe in separate file?
 
 # Get user language
 def get_system_locale():
@@ -51,7 +49,7 @@ def load_translations():
 
 # Get translation
 def t(key: str) -> str:
-    return TRANSLATIONS.get(key, key) # Fallback to the same key
+    return str(TRANSLATIONS.get(key, key)) # Fallback to the same key
 
 # On start get the language and translations
 load_translations()

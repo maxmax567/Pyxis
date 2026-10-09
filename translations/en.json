@@ -1,11 +1,12 @@
 {
     "language": "English",
-    "login_title": "Sign in to Pyxis",
+    "login_title": "Log in to Pyxis",
+    "email_login": "Log in with email",
     "email_label": "Email",
     "password_label": "Password",
-    "login_button": "Sign In",
-    "register_button": "Register",
-    "google_login": "Login with Google",
-    "logout_button": "Log Out",
-    "connected_as": "Connected as"
+    "login_button": "Log in",
+    "register_button": "Sign up",
+    "google_login": "Log in with Google",
+    "main_title": "Pyxis Menu",
+    "forgot_password_button": "I forgot my password"
 }

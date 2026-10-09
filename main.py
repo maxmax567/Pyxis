@@ -7,19 +7,28 @@ def google_login():
 def email_login():
     print("Email")
 
+def forgot_password():
+    print("Forgot Password")
+
+def register():
+    print("Register")
+
 dpg.create_context()
+
+with dpg.window(tag="login", label=l.t("login_title")): # type: ignore
+    dpg.add_text(l.t("email_login"))
+    dpg.add_input_text(label=l.t("email_label"))
+    dpg.add_input_text(label=l.t("password_label"))
+    dpg.add_button(label=l.t("login_button"), callback=email_login)
+    dpg.add_button(label=l.t("forgot_password_button"), callback=forgot_password)
+    dpg.add_button(label=l.t("google_login"), callback=google_login)
+    dpg.add_button(label=l.t("register_button"), callback=register)
+
+with dpg.window(tag="main", label=l.t("main_title")): # type: ignore
+    dpg.add_text(l.t("main_title"))
+
 dpg.create_viewport(title="Pyxis")
 dpg.setup_dearpygui()
-
-with dpg.window(label=l.t("login_title")): # Why an error
-    dpg.add_text("Log in with email")
-    dpg.add_input_text(label="Email")
-    dpg.add_input_text(label="Password")
-    dpg.add_button(label="Log in")
-    dpg.add_button(label="I forgot my password")
-    dpg.add_button(label="Log in with Google", callback=google_login)
-    dpg.add_button(label=l.t("create_account"))
-
 dpg.show_viewport()
 dpg.start_dearpygui()
 dpg.destroy_context()

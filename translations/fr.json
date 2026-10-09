@@ -1,0 +1,12 @@
+{
+    "language": "Français",
+    "login_title": "Connexion à Pyxis",
+    "email_login": "Connexion par e-mail",
+    "email_label": "E-mail",
+    "password_label": "Mot de passe",
+    "login_button": "Se connecter",
+    "register_button": "S'inscrire",
+    "google_login": "Connexion avec Google",
+    "main_title": "Menu de Pyxis",
+    "forgot_password_button": "Mot de passe oublié"
+}
