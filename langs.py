@@ -17,7 +17,6 @@ def get_system_locale():
     try:
         system_locale = locale.getlocale()[0]
         if system_locale:
-            print(system_locale)
             return system_locale[:2]
     except: # Don't know how to fix
         pass
@@ -43,8 +42,6 @@ def load_translations():
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
-            print(language)
-            print(file_path)
             TRANSLATIONS = json.load(f)
     except FileNotFoundError:
         print(f"File {language}.json not found")
@@ -54,8 +51,6 @@ def load_translations():
 
 # Get translation
 def t(key: str) -> str:
-    print(key)
-    print(TRANSLATIONS)
     return TRANSLATIONS.get(key, key) # Fallback to the same key
 
 # On start get the language and translations
