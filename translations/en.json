@@ -1,0 +1,10 @@
+{
+    "login_title": "Sign in to Pyxis",
+    "email_label": "Email",
+    "password_label": "Password",
+    "login_button": "Sign In",
+    "register_button": "Register",
+    "google_login": "Login with Google",
+    "logout_button": "Log Out",
+    "connected_as": "Connected as"
+}

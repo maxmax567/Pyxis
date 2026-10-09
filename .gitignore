@@ -1,1 +1,52 @@
+# Enviromental variables
 .env
+.env.local
+.env.*
+*.key
+*.pem
+
+# Virtual
+venv/
+env/
+.venv/
+ENV/
+
+# Compiled
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# PyCharm config
+.idea/
+*.iml
+*.ipr
+*.iws
+
+
+# OSs
+# macOS
+.DS_Store
+.AppleDouble
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# Logs
+*.log
+*.tmp
+*.temp
+.cache/

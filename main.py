@@ -1,4 +1,5 @@
 import dearpygui.dearpygui as dpg
+import langs as l
 
 def google_login():
     print("Google")
@@ -10,7 +11,7 @@ dpg.create_context()
 dpg.create_viewport(title="Pyxis")
 dpg.setup_dearpygui()
 
-with dpg.window(label="Login"):
+with dpg.window(label=l.t("login_title")):
     dpg.add_text("Login")
     dpg.add_button(label="Log in with Google", callback=google_login)
     dpg.add_text("Log in with email")
