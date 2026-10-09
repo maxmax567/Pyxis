@@ -2,6 +2,22 @@ import dearpygui.dearpygui as dpg
 import langs as l
 import supabase_client as sc
 import dearpygui.demo as demo
+import json
+import os
+
+language = "en"
+
+try:
+    with open("config.json", "r") as f:
+        config = json.load(f)
+        language = config.get("locale")
+
+except FileNotFoundError:
+    with open("config.json", "w") as f:
+        language = l.get_system_locale()
+        json.dump({"locale": l.get_system_locale()}, f)
+
+l.change_locale(language)
 
 def google_login():
     sc.google_login()
