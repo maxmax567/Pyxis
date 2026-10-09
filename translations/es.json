@@ -8,5 +8,8 @@
     "register_button": "Registrarse",
     "google_login": "Login con Google",
     "main_title": "Menu de Pyxis",
-    "forgot_password_button": "He olvidado la contraseña"
+    "forgot_password_button": "He olvidado la contraseña",
+    "login_success": "Login exitoso",
+    "login_failed": "Credenciales inválidas",
+    "settings": "Opciones"
 }

@@ -1,11 +1,13 @@
 import dearpygui.dearpygui as dpg
 import langs as l
+import supabase_client as sc
+import dearpygui.demo as demo
 
 def google_login():
-    print("Google")
+    sc.google_login()
 
 def email_login():
-    print("Email")
+    sc.login()
 
 def forgot_password():
     print("Forgot Password")
@@ -13,20 +15,30 @@ def forgot_password():
 def register():
     print("Register")
 
+def print_me():
+    print("Print")
+
 dpg.create_context()
 
 with dpg.window(tag="login", label=l.t("login_title")): # type: ignore
     dpg.add_text(l.t("email_login"))
-    dpg.add_input_text(label=l.t("email_label"))
-    dpg.add_input_text(label=l.t("password_label"))
+    dpg.add_input_text(hint=l.t("email_label"), tag="input_email")
+    dpg.add_input_text(password=True, hint=l.t("password_label"), tag="input_password")
     dpg.add_button(label=l.t("login_button"), callback=email_login)
     dpg.add_button(label=l.t("forgot_password_button"), callback=forgot_password)
     dpg.add_button(label=l.t("google_login"), callback=google_login)
     dpg.add_button(label=l.t("register_button"), callback=register)
 
-with dpg.window(tag="main", label=l.t("main_title")): # type: ignore
+with dpg.window(tag="main", label=l.t("main_title"), no_close=True): # type: ignore
+    with dpg.menu_bar():
+        with dpg.menu(label=l.t("settings")):
+
+
+        dpg.add_menu_item(label="Help", callback=print_me)
+
     dpg.add_text(l.t("main_title"))
-    dpg.add_text("tst")
+
+demo.show_demo()
 
 dpg.create_viewport(title="Pyxis")
 dpg.setup_dearpygui()

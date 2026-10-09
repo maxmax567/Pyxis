@@ -2,7 +2,7 @@ import json
 import locale
 import os
 
-# Translation module
+# Translation module for main
 
 # Global dictionary with the translations
 TRANSLATIONS = {}
