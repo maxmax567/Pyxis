@@ -26,6 +26,7 @@ with dpg.window(tag="login", label=l.t("login_title")): # type: ignore
 
 with dpg.window(tag="main", label=l.t("main_title")): # type: ignore
     dpg.add_text(l.t("main_title"))
+    dpg.add_text("tst")
 
 dpg.create_viewport(title="Pyxis")
 dpg.setup_dearpygui()
