@@ -11,5 +11,6 @@
     "forgot_password_button": "He olvidado la contraseña",
     "login_success": "Login exitoso",
     "login_failed": "Credenciales inválidas",
-    "settings": "Opciones"
+    "settings": "Opciones",
+    "language_selector": "Idioma"
 }

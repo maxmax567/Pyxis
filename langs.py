@@ -20,8 +20,6 @@ def get_system_locale():
         pass
     return "en" # Fallback to english
 
-language = get_system_locale() # Maybe not here??
-
 # Change language and reload translations
 def change_locale(new_locale: str):
     global language, TRANSLATIONS, languages

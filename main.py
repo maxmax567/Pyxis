@@ -18,6 +18,10 @@ def register():
 def print_me():
     print("Print")
 
+def language_updated(sender, app_data):
+    print(l.change_locale(app_data))
+
+
 dpg.create_context()
 
 with dpg.window(tag="login", label=l.t("login_title")): # type: ignore
@@ -32,7 +36,8 @@ with dpg.window(tag="login", label=l.t("login_title")): # type: ignore
 with dpg.window(tag="main", label=l.t("main_title"), no_close=True): # type: ignore
     with dpg.menu_bar():
         with dpg.menu(label=l.t("settings")):
-
+            dpg.add_text(l.t("language_selector"))
+            dpg.add_combo(l.languages, default_value=(l.get_system_locale()), callback=language_updated)
 
         dpg.add_menu_item(label="Help", callback=print_me)
 
