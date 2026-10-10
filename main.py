@@ -7,7 +7,16 @@ import threading
 import os
 import sys
 
+# Icon selection
+if sys.platform == "win32":
+    small_icon = large_icon = "icons/icon.ico"
+else:
+    small_icon = "icons/icon_small.png"
+    large_icon = "icons/icon_large.png"
+
 language = "en"
+
+session_active = True
 
 try:
     with open("config.json", "r") as f:
@@ -42,9 +51,6 @@ def forgot_password():
 def register():
     print("Register")
 
-def print_me():
-    print("Print")
-
 # Restart requested?
 restart_requested = False
 
@@ -64,11 +70,12 @@ def show_lang_popup():
     )
     dpg.focus_item("lang_popup")
 
+# Close restart window
 def close_lang_popup():
     dpg.configure_item("lang_popup", show=False)
 
+# Language changed
 def language_updated(sender, app_data):
-    print("callback llamado:", app_data)  # puedes quitarlo cuando funcione
     try:
         data = json.dumps({"locale": app_data})
         l.change_locale(app_data)
@@ -78,9 +85,9 @@ def language_updated(sender, app_data):
         print("Error en language_updated:", e)
         return
 
-    # Esperar unos frames a que el combo/menú se cierren antes de abrir el modal
     dpg.set_frame_callback(dpg.get_frame_count() + 3, show_lang_popup)
 
+# Open settings
 def open_settings():
     dpg.configure_item("settings", show=True)
     dpg.focus_item("settings")
@@ -91,8 +98,8 @@ with dpg.theme() as global_theme:  # type: ignore
     with dpg.theme_component(dpg.mvAll):  # type: ignore
         dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 4.0)
 
-with dpg.window(tag="lang_popup", modal=True, show=False, no_close=True,
-                no_resize=True, width=400, label=l.t("lang_popup_title")):  # type: ignore
+# Restart to apply changes window, it was for the language change, but better if it is generic
+with dpg.window(tag="lang_popup", modal=True, show=False, no_close=True, no_resize=True, width=400, label=l.t("lang_popup_title")):  # type: ignore
     dpg.add_text(l.t("lang_popup_desc"))
     dpg.add_text(l.t("lang_popup_alert"))
     dpg.add_separator()
@@ -101,12 +108,18 @@ with dpg.window(tag="lang_popup", modal=True, show=False, no_close=True,
         dpg.add_button(label=l.t("cancel"), callback=close_lang_popup)
 
 
-with dpg.window(tag="settings", label=l.t("settings"), show=False,
-                width=300, height=100, pos=[80, 80]):  # type: ignore
+# Settings window
+with dpg.window(tag="settings", label=l.t("settings"), show=False, width=300, height=100, pos=[80, 80]):  # type: ignore
     dpg.add_text(l.t("language_selector"))
     dpg.add_combo(l.languages, default_value=language,
                   callback=language_updated, tag="language_value")
 
+# Account window
+with dpg.window(label=l.t("account"), tag="account", show=True, width=300, height=200, pos=[100, 100]):  # type: ignore
+    dpg.add_button(label=l.t("login_button"), enabled=False)
+    dpg.add_button(label=l.t("close_session"), enabled=True)
+
+# Login window
 with dpg.window(tag="login", label=l.t("login_title"), show=False):  # type: ignore
     dpg.add_text(l.t("email_login"))
     dpg.add_input_text(hint=l.t("email_label"), tag="input_email")
@@ -116,22 +129,19 @@ with dpg.window(tag="login", label=l.t("login_title"), show=False):  # type: ign
     dpg.add_button(label=l.t("google_login"), callback=google_login)
     dpg.add_button(label=l.t("register_button"), callback=register)
 
-with dpg.window(tag="main", label=l.t("main_title"), no_close=True):  # type: ignore
+# Pyxis menu
+with dpg.window(tag="main", label=l.t("main_title"), no_close=True, width=220, height=400):  # type: ignore
     with dpg.menu_bar():  # type: ignore
         dpg.add_menu_item(label=l.t("settings"), callback=open_settings)
-        dpg.add_menu_item(label="Help", callback=print_me)
-        with dpg.menu(label=l.t("account")):  # type: ignore
-            dpg.add_button(label=l.t("login_button"))
+        dpg.add_menu_item(label=l.t("account"), callback=open_account)
+
 
     dpg.add_text(l.t("main_title"))
-
-    # Botón de prueba: bórralo cuando confirmes que el popup funciona
-    dpg.add_button(label="Test popup", callback=show_lang_popup)
 
 # demo.show_demo()
 
 dpg.bind_theme(global_theme)
-dpg.create_viewport(title="Pyxis")
+dpg.create_viewport(title="Pyxis", small_icon=small_icon, large_icon=large_icon)
 dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.start_dearpygui()
