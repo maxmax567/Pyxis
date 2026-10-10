@@ -85,7 +85,6 @@ def open_settings():
     dpg.configure_item("settings", show=True)
     dpg.focus_item("settings")
 
-
 dpg.create_context()
 
 with dpg.theme() as global_theme:  # type: ignore
