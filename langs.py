@@ -10,15 +10,22 @@ TRANSLATIONS = {}
 # Supported languages
 languages = ["en", "es", "ca", "va", "fr"] # Maybe in separate file?
 
+# Default to english
+language = "en"
+
 # Get user language
-def get_system_locale():
+def get_system_locale() -> str:
     try:
         system_locale = locale.getlocale()[0]
+        if not system_locale:
+            system_locale = locale.getdefaultlocale()[0]  # e.g. "es_ES"
         if system_locale:
-            return system_locale[:2]
-    except: # Don't know how to fix
+            code = system_locale[:2].lower()
+            if code in languages:
+                return code
+    except (ValueError, locale.Error):
         pass
-    return "en" # Fallback to english
+    return "en"
 
 # Change language and reload translations
 def change_locale(new_locale: str):
@@ -41,7 +48,7 @@ def load_translations():
             TRANSLATIONS = json.load(f)
     except FileNotFoundError:
         print(f"File {language}.json not found")
-        language = "es" # Fallback to english if file not found
+        language = "en" # Fallback to english if file not found
         with open("translations/en.json", "r", encoding="utf-8") as f:
             TRANSLATIONS = json.load(f)
 
