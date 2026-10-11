@@ -92,11 +92,29 @@ def open_settings():
     dpg.configure_item("settings", show=True)
     dpg.focus_item("settings")
 
+# Open account
+def open_account():
+    dpg.configure_item("account", show=True)
+    dpg.focus_item("account")
+
+def open_login():
+    print("Pressed")
+
 dpg.create_context()
 
-with dpg.theme() as global_theme:  # type: ignore
-    with dpg.theme_component(dpg.mvAll):  # type: ignore
+with dpg.theme() as global_theme:
+    with dpg.theme_component(dpg.mvAll):
         dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 4.0)
+
+    with dpg.theme_component(dpg.mvButton, enabled_state=False):
+        dpg.add_theme_color(dpg.mvThemeCol_Button, (85, 85, 85, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_ButtonHovered, (85, 85, 85, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_ButtonActive, (85, 85, 85, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (150, 150, 150, 255))
+
+    with dpg.theme_component(dpg.mvInputText, enabled_state=False):
+        dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (85, 85, 85, 255))
+        dpg.add_theme_color(dpg.mvThemeCol_Text, (150, 150, 150, 255))
 
 # Restart to apply changes window, it was for the language change, but better if it is generic
 with dpg.window(tag="lang_popup", modal=True, show=False, no_close=True, no_resize=True, width=400, label=l.t("lang_popup_title")):  # type: ignore
@@ -115,9 +133,9 @@ with dpg.window(tag="settings", label=l.t("settings"), show=False, width=300, he
                   callback=language_updated, tag="language_value")
 
 # Account window
-with dpg.window(label=l.t("account"), tag="account", show=True, width=300, height=200, pos=[100, 100]):  # type: ignore
-    dpg.add_button(label=l.t("login_button"), enabled=False)
-    dpg.add_button(label=l.t("close_session"), enabled=True)
+with dpg.window(label=l.t("account"), tag="account", show=False, width=300, height=200, pos=[100, 100]):  # type: ignore
+    dpg.add_button(label=l.t("login_button"), enabled=session_active, callback=open_login)
+    dpg.add_button(label=l.t("close_session"), enabled=not session_active)
 
 # Login window
 with dpg.window(tag="login", label=l.t("login_title"), show=False):  # type: ignore
@@ -138,7 +156,7 @@ with dpg.window(tag="main", label=l.t("main_title"), no_close=True, width=220, h
 
     dpg.add_text(l.t("main_title"))
 
-# demo.show_demo()
+demo.show_demo()
 
 dpg.bind_theme(global_theme)
 dpg.create_viewport(title="Pyxis", small_icon=small_icon, large_icon=large_icon)
