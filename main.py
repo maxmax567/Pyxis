@@ -14,10 +14,15 @@ else:
     small_icon = "icons/icon_small.png"
     large_icon = "icons/icon_large.png"
 
+# Variables
 language = "en"
+session_active = False
+restart_requested = False
 
-session_active = True
+# Window groups, maybe separate file??
+window_groups = {"account": ["account", "login"]}
 
+# Load config
 try:
     with open("config.json", "r") as f:
         config = json.load(f)
@@ -34,25 +39,51 @@ except (FileNotFoundError, json.JSONDecodeError):
         language = l.get_system_locale()
         json.dump({"locale": l.get_system_locale()}, s)
 
+# Change language to the loaded in the configuration
 l.change_locale(language)
 
+# Log in with Google
 def google_login():
     def worker():
-        sc.google_login()
+        global session_active
+        ok, message = sc.google_login()
+        print("google_login ->", ok, message)  # comprueba que llega aquí
+        session_active = ok
+        close("account")  # cierra account y login
+        update_accounts()
+        popup("login_browser_done" if ok else message, translate=ok)
     threading.Thread(target=worker, daemon=True).start()
 
+def popup(msg: str, translate: bool = True) -> None:
+    text = l.t(msg) if translate else msg
+    dpg.set_value("popup_msg", text)
+
+    def _show():
+        vw = dpg.get_viewport_client_width()
+        vh = dpg.get_viewport_client_height()
+        dpg.configure_item(
+            "popup",
+            show=True,
+            pos=[max(vw // 2 - 150, 0), max(vh // 2 - 50, 0)],
+        )
+        dpg.focus_item("popup")
+
+    dpg.set_frame_callback(dpg.get_frame_count() + 3, _show)
+
+def close_popup():
+    dpg.configure_item("popup", show=False)
+
+# Log in with email/password
 def email_login():
     sc.login()
 
+# Forgot password
 def forgot_password():
     print("Forgot Password")
 
 # Register
 def register():
     print("Register")
-
-# Restart requested?
-restart_requested = False
 
 # Restart
 def restart():
@@ -94,15 +125,38 @@ def open_settings():
 
 # Open account
 def open_account():
+    close("account")
     dpg.configure_item("account", show=True)
     dpg.focus_item("account")
 
 def open_login():
-    print("Pressed")
+    close("account")
+    vw = dpg.get_viewport_client_width()
+    vh = dpg.get_viewport_client_height()
+    dpg.configure_item(
+        "login",
+        show=True,
+        pos=[max(vw // 2 - 150, 0), max(vh // 2 - 100, 0)],
+    )
+    dpg.focus_item("login")
+
+def close(window_group: str):
+    global window_groups
+    if window_group in window_groups:
+        for i in window_groups[window_group]:
+            dpg.configure_item(i, show=False)
+    else:
+        print("Not a group")
+
+# Update accounts UI
+def update_accounts():
+    dpg.configure_item("login_btn", enabled=not session_active)
+    dpg.configure_item("close_session", enabled=session_active)
+    dpg.configure_item("register", enabled=not session_active)
 
 dpg.create_context()
 
-with dpg.theme() as global_theme:
+with dpg.theme() as global_theme: # type: ignore
     with dpg.theme_component(dpg.mvAll):
         dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 4.0)
 
@@ -125,20 +179,24 @@ with dpg.window(tag="lang_popup", modal=True, show=False, no_close=True, no_resi
         dpg.add_button(label=l.t("restart"), callback=restart)
         dpg.add_button(label=l.t("cancel"), callback=close_lang_popup)
 
+# Generic popup
+with dpg.window(tag="popup", label=l.t("system_msg"), show=False, modal=True, no_resize=True, width=300, height=100):
+    dpg.add_text("", tag="popup_msg", wrap=280)
+    dpg.add_separator()
+    dpg.add_button(label="OK", callback=close_popup)
 
 # Settings window
 with dpg.window(tag="settings", label=l.t("settings"), show=False, width=300, height=100, pos=[80, 80]):  # type: ignore
     dpg.add_text(l.t("language_selector"))
-    dpg.add_combo(l.languages, default_value=language,
-                  callback=language_updated, tag="language_value")
+    dpg.add_combo(l.languages, default_value=language, callback=language_updated, tag="language_value")
 
 # Account window
 with dpg.window(label=l.t("account"), tag="account", show=False, width=300, height=200, pos=[100, 100]):  # type: ignore
-    dpg.add_button(label=l.t("login_button"), enabled=session_active, callback=open_login)
-    dpg.add_button(label=l.t("close_session"), enabled=not session_active)
-
+    dpg.add_button(label=l.t("login_button"), enabled=not session_active, callback=open_login, tag="login_btn")
+    dpg.add_button(label=l.t("close_session"), enabled=session_active, tag="close_session")
+    dpg.add_button(label=l.t("register_button"), callback=register, tag="register", enabled=not session_active)
 # Login window
-with dpg.window(tag="login", label=l.t("login_title"), show=False):  # type: ignore
+with dpg.window(tag="login", label=l.t("login_title"), show=False, no_move=True, no_resize=True, no_collapse=True, modal=True):  # type: ignore
     dpg.add_text(l.t("email_login"))
     dpg.add_input_text(hint=l.t("email_label"), tag="input_email")
     dpg.add_input_text(password=True, hint=l.t("password_label"), tag="input_password")
@@ -146,6 +204,7 @@ with dpg.window(tag="login", label=l.t("login_title"), show=False):  # type: ign
     dpg.add_button(label=l.t("forgot_password_button"), callback=forgot_password)
     dpg.add_button(label=l.t("google_login"), callback=google_login)
     dpg.add_button(label=l.t("register_button"), callback=register)
+    dpg.add_button(label=l.t("back"), callback=open_account)
 
 # Pyxis menu
 with dpg.window(tag="main", label=l.t("main_title"), no_close=True, width=220, height=400):  # type: ignore
@@ -156,7 +215,7 @@ with dpg.window(tag="main", label=l.t("main_title"), no_close=True, width=220, h
 
     dpg.add_text(l.t("main_title"))
 
-demo.show_demo()
+#demo.show_demo()
 
 dpg.bind_theme(global_theme)
 dpg.create_viewport(title="Pyxis", small_icon=small_icon, large_icon=large_icon)

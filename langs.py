@@ -8,7 +8,7 @@ import os
 TRANSLATIONS = {}
 
 # Supported languages
-languages = ["en", "es", "ca", "va", "fr"] # Maybe in separate file?
+languages = ["en", "es", "ca", "va", "fr", "pr", "it", "de", "ja", "zh"] # Maybe in separate file?
 
 # Default to english
 language = "en"
@@ -54,6 +54,10 @@ def load_translations():
 
 # Get translation
 def t(key: str) -> str:
+    """
+
+    :rtype: str
+    """
     return str(TRANSLATIONS.get(key, key)) # Fallback to the same key
 
 # On start get the language and translations
