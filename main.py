@@ -20,7 +20,7 @@ session_active = False
 restart_requested = False
 
 # Window groups, maybe separate file??
-window_groups = {"account": ["account", "login"]}
+window_groups = {"account": ["account", "login", "register_window"]}
 
 # Load config
 try:
@@ -84,6 +84,22 @@ def forgot_password():
 # Register
 def register():
     print("Register")
+
+# Open register
+def open_register():
+    close("account")
+
+    def _show():
+        vw = dpg.get_viewport_client_width()
+        vh = dpg.get_viewport_client_height()
+        dpg.configure_item(
+            "register_window",
+            show=True,
+            pos=[max(vw // 2 - 150, 0), max(vh // 2 - 85, 0)],
+        )
+        dpg.focus_item("register_window")
+
+    dpg.set_frame_callback(dpg.get_frame_count() + 3, _show)
 
 # Restart
 def restart():
@@ -152,7 +168,7 @@ def close(window_group: str):
 def update_accounts():
     dpg.configure_item("login_btn", enabled=not session_active)
     dpg.configure_item("close_session", enabled=session_active)
-    dpg.configure_item("register", enabled=not session_active)
+    dpg.configure_item("register_btn", enabled=not session_active)
 
 dpg.create_context()
 
@@ -194,7 +210,7 @@ with dpg.window(tag="settings", label=l.t("settings"), show=False, width=300, he
 with dpg.window(label=l.t("account"), tag="account", show=False, width=300, height=200, pos=[100, 100]):  # type: ignore
     dpg.add_button(label=l.t("login_button"), enabled=not session_active, callback=open_login, tag="login_btn")
     dpg.add_button(label=l.t("close_session"), enabled=session_active, tag="close_session")
-    dpg.add_button(label=l.t("register_button"), callback=register, tag="register", enabled=not session_active)
+    dpg.add_button(label=l.t("register_button"), callback=open_register, tag="register_btn", enabled=not session_active)
 # Login window
 with dpg.window(tag="login", label=l.t("login_title"), show=False, no_move=True, no_resize=True, no_collapse=True, modal=True):  # type: ignore
     dpg.add_text(l.t("email_login"))
@@ -203,6 +219,14 @@ with dpg.window(tag="login", label=l.t("login_title"), show=False, no_move=True,
     dpg.add_button(label=l.t("login_button"), callback=email_login)
     dpg.add_button(label=l.t("forgot_password_button"), callback=forgot_password)
     dpg.add_button(label=l.t("google_login"), callback=google_login)
+    dpg.add_button(label=l.t("register_button"), callback=open_register)
+    dpg.add_button(label=l.t("back"), callback=open_account)
+
+# Register window
+with dpg.window(tag="register_window", label=l.t("register_button"), show=False, no_move=True, no_resize=True, no_collapse=True, modal=True, width=300, height=170):
+    dpg.add_input_text(hint=l.t("email_label"), tag="input_email_reg")
+    dpg.add_input_text(password=True, hint=l.t("password_label"), tag="input_password_reg")
+    dpg.add_input_text(password=True, hint=l.t("password_label_confirm"), tag="input_password_reg_confirm")
     dpg.add_button(label=l.t("register_button"), callback=register)
     dpg.add_button(label=l.t("back"), callback=open_account)
 
