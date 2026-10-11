@@ -8,4 +8,4 @@ Pyxis is an open source desktop application built with Dear PyGui that acts as a
 
 The app is designed to be extensible - you can add your own mini-applications and translate it into different languages.
 
-There is a lot of things to do and it is very new.
+There is a lot of things to do and fix.
