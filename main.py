@@ -84,7 +84,7 @@ def forgot_password():
 
 # Register
 def register():
-    popup("Request an account on the discord (Link in github)", False)
+    popup("Not working :(", False)
 
 # Open register
 def open_register():
@@ -173,6 +173,9 @@ def update_accounts():
 
 # Close session
 def logout():
+    global session_active
+    session_active = False
+    update_accounts()
     sc.logout()
 
 dpg.create_context()
@@ -216,6 +219,7 @@ with dpg.window(label=l.t("account"), tag="account", show=False, width=300, heig
     dpg.add_button(label=l.t("login_button"), enabled=not session_active, callback=open_login, tag="login_btn")
     dpg.add_button(label=l.t("close_session"), enabled=session_active, tag="close_session", callback=logout)
     dpg.add_button(label=l.t("register_button"), callback=open_register, tag="register_btn", enabled=not session_active)
+
 # Login window
 with dpg.window(tag="login", label=l.t("login_title"), show=False, no_move=True, no_resize=True, no_collapse=True, modal=True):  # type: ignore
     dpg.add_text(l.t("email_login"))
@@ -240,11 +244,10 @@ with dpg.window(tag="main", label=l.t("main_title"), no_close=True, width=220, h
     with dpg.menu_bar():  # type: ignore
         dpg.add_menu_item(label=l.t("settings"), callback=open_settings)
         dpg.add_menu_item(label=l.t("account"), callback=open_account)
+    with dpg.collapsing_header(label=l.t("official_apps")):
+        for
 
-
-    dpg.add_text(l.t("main_title"))
-
-#demo.show_demo()
+demo.show_demo()
 
 dpg.bind_theme(global_theme)
 dpg.create_viewport(title="Pyxis", small_icon=small_icon, large_icon=large_icon)

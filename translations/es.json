@@ -34,5 +34,6 @@
     "close_session": "Cerrar sesión",
     "system_msg": "Mensaje",
     "back": "Atrás",
-    "password_label_confirm": "Confirmar contraseña"
+    "password_label_confirm": "Confirmar contraseña",
+    "official_apps": "Apps oficiales"
 }
