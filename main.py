@@ -20,7 +20,7 @@ session_active = False
 restart_requested = False
 
 # Window groups, maybe separate file??
-window_groups = {"account": ["account", "login", "register_window"]}
+window_groups = {"account": ["account", "login", "register_window"], "all": ["account", "login", "register_window"]}
 
 # Load config
 try:
@@ -55,6 +55,7 @@ def google_login():
     threading.Thread(target=worker, daemon=True).start()
 
 def popup(msg: str, translate: bool = True) -> None:
+    close("all")
     text = l.t(msg) if translate else msg
     dpg.set_value("popup_msg", text)
 
@@ -83,7 +84,7 @@ def forgot_password():
 
 # Register
 def register():
-    print("Register")
+    popup("Request an account on the discord (Link in github)", False)
 
 # Open register
 def open_register():
@@ -170,6 +171,10 @@ def update_accounts():
     dpg.configure_item("close_session", enabled=session_active)
     dpg.configure_item("register_btn", enabled=not session_active)
 
+# Close session
+def logout():
+    sc.logout()
+
 dpg.create_context()
 
 with dpg.theme() as global_theme: # type: ignore
@@ -209,7 +214,7 @@ with dpg.window(tag="settings", label=l.t("settings"), show=False, width=300, he
 # Account window
 with dpg.window(label=l.t("account"), tag="account", show=False, width=300, height=200, pos=[100, 100]):  # type: ignore
     dpg.add_button(label=l.t("login_button"), enabled=not session_active, callback=open_login, tag="login_btn")
-    dpg.add_button(label=l.t("close_session"), enabled=session_active, tag="close_session")
+    dpg.add_button(label=l.t("close_session"), enabled=session_active, tag="close_session", callback=logout)
     dpg.add_button(label=l.t("register_button"), callback=open_register, tag="register_btn", enabled=not session_active)
 # Login window
 with dpg.window(tag="login", label=l.t("login_title"), show=False, no_move=True, no_resize=True, no_collapse=True, modal=True):  # type: ignore
