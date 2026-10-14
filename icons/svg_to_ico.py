@@ -7,6 +7,3 @@ img = Image.open(io.BytesIO(png_bytes)).convert("RGBA")
 
 sizes = [(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
 img.save("icon.ico", sizes=sizes)
-
-with Image.open("icon.ico") as ico:
-    print("Tamaños incluidos en el .ico:", ico.info.get("sizes"))

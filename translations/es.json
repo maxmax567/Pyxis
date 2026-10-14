@@ -35,5 +35,6 @@
     "system_msg": "Mensaje",
     "back": "Atrás",
     "password_label_confirm": "Confirmar contraseña",
-    "official_apps": "Apps oficiales"
+    "official_apps": "Apps oficiales",
+    "notes": "Notas"
 }

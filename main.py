@@ -6,6 +6,29 @@ import json
 import threading
 import os
 import sys
+import requests
+import importlib
+import pkgutil
+import apps
+
+# Load local apps
+def load_local_apps():
+    found = []
+    for m in pkgutil.iter_modules(apps.__path__):
+        try:
+            mod = importlib.import_module(f"apps.{m.name}")
+            if hasattr(mod, "launch") and hasattr(mod, "app"):
+                found.append(mod)
+        except Exception as e:
+            print(f"Error loading app {m.name}:", e)
+    return found
+
+# Run an app
+def run_app(sender, app_data, user_data):
+    try:
+        user_data()  # launch() from the app
+    except Exception as e:
+        popup(f"Error: {e}", False)
 
 # Icon selection
 if sys.platform == "win32":
@@ -18,6 +41,7 @@ else:
 language = "en"
 session_active = False
 restart_requested = False
+url = "https://raw.githubusercontent.com/maxmax567/Pyxis/main/apps.json"
 
 # Window groups, maybe separate file??
 window_groups = {"account": ["account", "login", "register_window"], "all": ["account", "login", "register_window"]}
@@ -38,6 +62,16 @@ except (FileNotFoundError, json.JSONDecodeError):
     with open("config.json", "w") as s:
         language = l.get_system_locale()
         json.dump({"locale": l.get_system_locale()}, s)
+
+# Load Supabase apps list
+def fetch_remote_apps():
+    try:
+        r = requests.get(url, timeout=5)
+        r.raise_for_status()
+        return r.json()
+    except Exception as e:
+        print("Error loading apps:", e)
+        return []
 
 # Change language to the loaded in the configuration
 l.change_locale(language)
@@ -180,6 +214,7 @@ def logout():
 
 dpg.create_context()
 
+# Create theme
 with dpg.theme() as global_theme: # type: ignore
     with dpg.theme_component(dpg.mvAll):
         dpg.add_theme_style(dpg.mvStyleVar_FrameRounding, 4.0)
@@ -193,6 +228,12 @@ with dpg.theme() as global_theme: # type: ignore
     with dpg.theme_component(dpg.mvInputText, enabled_state=False):
         dpg.add_theme_color(dpg.mvThemeCol_FrameBg, (85, 85, 85, 255))
         dpg.add_theme_color(dpg.mvThemeCol_Text, (150, 150, 150, 255))
+
+# Load fonts
+with dpg.font_registry():
+    default_font = dpg.add_font("./fonts/Rubik-Regular.ttf", size=15)
+
+dpg.bind_font(default_font)
 
 # Restart to apply changes window, it was for the language change, but better if it is generic
 with dpg.window(tag="lang_popup", modal=True, show=False, no_close=True, no_resize=True, width=400, label=l.t("lang_popup_title")):  # type: ignore
@@ -245,7 +286,8 @@ with dpg.window(tag="main", label=l.t("main_title"), no_close=True, width=220, h
         dpg.add_menu_item(label=l.t("settings"), callback=open_settings)
         dpg.add_menu_item(label=l.t("account"), callback=open_account)
     with dpg.collapsing_header(label=l.t("official_apps")):
-        for
+        for mod in load_local_apps():
+            dpg.add_button(label=l.t(mod.app), width=-1, callback=run_app, user_data=mod.launch)
 
 demo.show_demo()
 
