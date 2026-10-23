@@ -9,3 +9,8 @@ Pyxis is an open source desktop application built with Dear PyGui that acts as a
 The app is designed to be extensible - you can add your own mini-applications and translate it into different languages.
 
 There is a lot of things to do and fix.
+
+## Official apps
+- Notes: a simple notes app where you can export your files or save them online if you log in
+- Calculator: a calculator
+- Tasks: a little tasks app
